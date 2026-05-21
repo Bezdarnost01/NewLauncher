@@ -17,6 +17,8 @@ export component AppWindow inherits Window {
     callback open-telegram();
 
     in-out property <int> online-count: 0;
+    in-out property <string> version: "1.0.0";
+    in-out property <string> update-date: "21.05.2026";
 
     width: 540px;
     height: 540px;
@@ -67,6 +69,8 @@ export component AppWindow inherits Window {
             y: 129px;
 
             online-count: root.online-count;
+            update-date: root.update-date;
+            version: root.version;
         }
 
         play-button := PlayButton {

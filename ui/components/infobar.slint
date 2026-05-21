@@ -94,7 +94,7 @@ export component InfoBar inherits Rectangle {
         info-text: "Версия:";
         text-color: #9154D1;
  
-        info-param-text: "1.0.0";
+        info-param-text: root.version;
     }
 
     update-date-field := InfoField {
@@ -107,6 +107,6 @@ export component InfoBar inherits Rectangle {
         info-text: "Дата обновления:";
         text-color: #A6A5A7;
  
-        info-param-text: "21.05.2026";
+        info-param-text: root.update-date;
     }
 }
