@@ -17,6 +17,8 @@ pub struct ApiConfig {
     pub version: String,
     pub last_update_date: String,
     pub steam_appid: u32,
+    pub telegram_link: String,
+    pub discord_link: String
 }
 
 #[derive(Clone)]
@@ -47,4 +49,16 @@ impl ApiClient {
 
 pub fn config_channel() -> (RemoteConfigSender, RemoteConfig) {
     watch::channel(None)
+}
+
+pub async fn wait_config(remote_config: &mut RemoteConfig) -> Option<ApiConfig> {
+    loop {
+        if let Some(config) = remote_config.borrow().clone() {
+            return Some(config);
+        }
+
+        if remote_config.changed().await.is_err() {
+            return None;
+        }
+    }
 }

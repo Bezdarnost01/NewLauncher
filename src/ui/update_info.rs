@@ -1,7 +1,7 @@
 use slint::ComponentHandle;
 
 use crate::{
-    integrations::api::{ApiConfig, RemoteConfig},
+    integrations::api::{RemoteConfig, wait_config},
     ui::AppWindow,
 };
 
@@ -23,26 +23,12 @@ pub fn update(
         let result = app_weak.upgrade_in_event_loop(move |app| {
             app.set_version(version.into());
             app.set_update_date(last_update_date.into());
+            app.set_discord_link(config.discord_link.into());
+            app.set_telegram_link(config.telegram_link.into());
         });
 
         if result.is_err() {
             eprintln!("failed to update app config in UI");
         }
     });
-}
-
-async fn wait_config(remote_config: &mut RemoteConfig) -> Option<ApiConfig> {
-    loop {
-        let config = {
-            remote_config.borrow().clone()
-        };
-
-        if let Some(config) = config {
-            return Some(config);
-        }
-
-        if remote_config.changed().await.is_err() {
-            return None;
-        }
-    }
 }

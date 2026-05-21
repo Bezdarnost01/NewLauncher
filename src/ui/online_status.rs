@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use crate::{
     integrations::{
-        api::RemoteConfig,
+        api::{RemoteConfig, wait_config},
         steam::SteamClient,
     },
     ui::AppWindow,
@@ -22,10 +22,11 @@ pub fn start(
     let app_weak = app.as_weak();
 
     runtime.spawn(async move {
-        let steam_appid = match wait_steam_appid(&mut remote_config).await {
-            Some(appid) => appid,
-            None => return,
+        let Some(config) = wait_config(&mut remote_config).await else {
+            return;
         };
+
+        let steam_appid = config.steam_appid;
 
         let mut ticker = interval(REFRESH_INTERVAL);
         ticker.set_missed_tick_behavior(MissedTickBehavior::Skip);
@@ -44,16 +45,4 @@ pub fn start(
             }
         }
     });
-}
-
-async fn wait_steam_appid(remote_config: &mut RemoteConfig) -> Option<u32> {
-    loop {
-        if let Some(config) = remote_config.borrow().as_ref() {
-            return Some(config.steam_appid);
-        }
-
-        if remote_config.changed().await.is_err() {
-            return None;
-        }
-    }
 }

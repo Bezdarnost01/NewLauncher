@@ -32,11 +32,21 @@ pub fn bind_tools_button(app: &AppWindow) {
 }
 
 pub fn bind_links(app: &AppWindow) {
+    let app_weak = app.as_weak();
+
     app.on_open_discord(move || {
-            let _ = open::that("https://discord.com");
+        if let Some(app) = app_weak.upgrade() {
+            let link = app.get_discord_link();
+            let _ = open::that(link.as_str());
+        }
     });
-    
+
+    let app_weak = app.as_weak();
+
     app.on_open_telegram(move || {
-        let _ = open::that("https://telegram.com");
+        if let Some(app) = app_weak.upgrade() {
+            let link = app.get_telegram_link();
+            let _ = open::that(link.as_str());
+        }
     });
 }
