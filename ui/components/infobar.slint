@@ -1,0 +1,112 @@
+import "../../../fonts/Nunito-VariableFont.ttf";
+
+component InfoField inherits Rectangle {
+    in property <string> info-text: "Онлайн:";
+    in property <brush> text-color: white;
+
+    in property <string> info-param-text: "20";
+    in property <brush> text-param-color: white;
+
+    in property <image> icon: @image-url("../../img/online_icon.svg");
+    in property <length> icon-width: 24px;
+    in property <length> icon-height: 24px;
+    in property <brush> icon-color: white;
+
+    width: 285px;
+    height: 35px;
+
+    background: #19181B;
+
+    border-color: #26242D;
+    border-radius: 10px;
+    border-width: 1px;
+
+    icon := Image {
+        width: root.icon-width;
+        height: root.icon-height;
+
+        x: 10px;
+        y: (root.height - icon-height) / 2;
+
+        source: root.icon;
+        colorize: root.icon-color;
+    }
+
+    info-field-text := Text {
+        text: info-text;
+
+        x: 36px;
+        y: (root.height - info-field-text.height) / 2 + 1px;
+
+        color: text-color;
+        font-family: "Nunito";
+        font-weight: FontWeight.medium;
+        font-size: 14px;
+    }
+
+    info-field-param-text := Text {
+        text: info-param-text;
+
+        x: root.width - info-field-param-text.width - 10px;
+        y: (root.height - info-field-text.height) / 2;
+
+        color: text-color;
+        font-family: "Nunito";
+        font-weight: FontWeight.medium;
+        font-size: 14px;
+    }
+}
+
+export component InfoBar inherits Rectangle {
+    in-out property <int> online-count;
+    in-out property <string> version;
+    in-out property <string> update-date;
+
+    width: 303px;
+    height: 165px;
+
+    background: #19181B;
+
+    border-color: #26242D;
+    border-radius: 10px;
+    border-width: 2px;
+
+    online-field := InfoField {
+        x: (root.width - online-field.width) / 2;
+        y: 12px;
+
+        icon: @image-url("../../img/online_icon.svg");
+        icon-color: #3ACE5F;
+
+        info-text: "Онлайн:";
+        text-color: #3ACE5F;
+ 
+        info-param-text: root.online-count;
+    }
+
+    version-field := InfoField {
+        x: (root.width - online-field.width) / 2;
+        y: (root.height - online-field.height) / 2;
+
+        icon: @image-url("../../img/version_icon.svg");
+        icon-color: #9154D1;
+
+        info-text: "Версия:";
+        text-color: #9154D1;
+ 
+        info-param-text: "1.0.0";
+    }
+
+    update-date-field := InfoField {
+        x: (root.width - online-field.width) / 2;
+        y: 118px;
+
+        icon: @image-url("../../img/update_icon.svg");
+        icon-color: #A6A5A7;
+
+        info-text: "Дата обновления:";
+        text-color: #A6A5A7;
+ 
+        info-param-text: "21.05.2026";
+    }
+}

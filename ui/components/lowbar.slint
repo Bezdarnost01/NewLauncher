@@ -1,0 +1,50 @@
+import { CustomButton } from "button.slint";
+
+export component LowBar inherits Rectangle {
+    callback open-discord();
+    callback open-telegram();
+
+    telegram := CustomButton {
+        x: 221px;
+        y: 0px;
+
+        use-pressed-state: false;
+
+        button-width: 44px;
+        button-height: 44px;
+        button-border-radius: 13px;
+
+        button-background: #201e23;
+        button-hover-background: #2B2334;
+
+        button-icon: @image-url("../../img/telegram_icon.svg");
+        button-icon-color: #A6A5A7;
+        button-icon-hover-color: #9154D1;
+
+        clicked => {
+            root.open-telegram();
+        }
+    }
+
+    discord := CustomButton {
+        x: 274px;
+        y: 0px;
+
+        use-pressed-state: false;
+
+        button-width: 44px;
+        button-height: 44px;
+        button-border-radius: 13px;
+
+        button-background: #201e23;
+        button-hover-background: #2B2334;
+
+        button-icon: @image-url("../../img/discord_icon.svg");
+        button-icon-color: #A6A5A7;
+        button-icon-hover-color: #9154D1;
+
+        clicked => {
+            root.open-discord();
+        }
+    }
+}

@@ -1,0 +1,53 @@
+import { CustomButton } from "button.slint";
+import "../../fonts/Nunito-VariableFont.ttf";
+
+export component TitleBar inherits Rectangle {
+    callback close-clicked();
+    callback minimize-clicked();
+
+    background: transparent;
+
+    close := CustomButton {
+        x: parent.width - self.width - 12px;
+        y: 12px;
+
+        button-width: 44px;
+        button-height: 44px;
+        button-border-radius: 13px;
+
+        button-background: #201e23;
+        button-hover-background: #2F1C21;
+        button-pressed-background: #381E1E;
+
+        button-icon: @image-url("../../img/close_icon.svg");
+        button-icon-color: #A6A5A7;
+        button-icon-hover-color: #D15854;
+        button-icon-pressed-color: #D15854;
+
+        clicked => {
+            root.close-clicked();
+        }
+    }
+
+    minimize := CustomButton {
+        x: parent.width - self.width - 65px;
+        y: 12px;
+
+        button-width: 44px;
+        button-height: 44px;
+        button-border-radius: 13px;
+
+        button-background: #201e23;
+        button-hover-background: #2B2334;
+        button-pressed-background: #201E23;
+
+        button-icon: @image-url("../../img/minize_icon.svg");
+        button-icon-color: #A6A5A7;
+        button-icon-hover-color: #9154D1;
+        button-icon-pressed-color: #F4F4F4;
+
+        clicked => {
+            root.minimize-clicked();
+        }
+    }
+}

@@ -1,0 +1,95 @@
+import { TitleBar } from "components/titlebar.slint";
+import { LowBar } from "components/lowbar.slint";
+import { InfoBar } from "components/infobar.slint";
+import { PlayButton } from "components/button.slint";
+export component AppWindow inherits Window {
+    callback window-drag();
+
+    callback close-clicked();
+    callback minimize-clicked();
+    callback play-clicked();
+
+    callback party-clicked();
+    callback home-clicked();
+    callback settings-clicked();
+    
+    callback open-discord();
+    callback open-telegram();
+
+    in-out property <int> online-count: 0;
+
+    width: 540px;
+    height: 540px;
+
+    title: "DBDLegacy";
+    icon: @image-url("../img/icon.png");
+    no-frame: true;
+    background: transparent;
+
+    Rectangle {
+        x: 0px;
+        y: 0px;
+
+        border-radius: 24px;
+
+        background: #131115;
+
+        drag := TouchArea {
+            x: 0px;
+            y: 0px;
+
+            width: parent.width;
+            height: 62px;
+
+            moved => {
+                root.window-drag();
+            }
+        }
+
+        TitleBar {
+            x: 0px;
+            y: 0px;
+
+            width: parent.width;
+            height: 62px;
+
+            close-clicked => {
+                root.close-clicked();
+            }
+
+            minimize-clicked => {
+                root.minimize-clicked();
+            }
+        }
+
+        InfoBar {
+            x: 119px;
+            y: 129px;
+
+            online-count: root.online-count;
+        }
+
+        play-button := PlayButton {
+            x: (parent.width - play-button.width) / 2;
+            y: 371px;
+
+            clicked => {
+                play-clicked();
+            }
+        }
+
+        LowBar {
+            x: 0;
+            y: 485px;
+
+            open-discord => {
+                root.open-discord();
+            }
+
+            open-telegram => {
+                root.open-telegram();
+            }
+        }
+    }
+
+}

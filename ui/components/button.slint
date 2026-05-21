@@ -1,0 +1,113 @@
+export component CustomButton inherits Rectangle {
+    in property <bool> use-pressed-state: true;
+    in property <string> tooltip-text: "";
+
+    in property <length> button-width: 44px;
+    in property <length> button-height: 44px;
+    in property <length> button-border-radius: 13px;
+    in property <brush> button-background: #201E23;
+    in property <brush> button-hover-background: #2b2334;
+    in property <brush> button-pressed-background: #372d41;
+
+    in property <image> button-icon;
+    in property <length> icon-width: 24px;
+    in property <length> icon-height: 24px;
+    in property <length> icon-x: (root.width - icon-width) / 2;
+    in property <length> icon-y: (root.height - icon-height) / 2;
+    in property <brush> button-icon-color: white;
+    in property <brush> button-icon-hover-color: white;
+    in property <brush> button-icon-pressed-color: white;
+
+    callback clicked();
+
+    width: button-width;
+    height: button-height;
+
+    border-radius: button-border-radius;
+
+    background: button-background;
+    border-color: #2E2B32;
+
+    icon := Image {
+        width: root.icon-width;
+        height: root.icon-height;
+
+        x: root.icon-x;
+        y: root.icon-y;
+
+        source: root.button-icon;
+        colorize: root.button-icon-color;
+    }
+
+    touch := TouchArea {
+        x: 0px;
+        y: 0px;
+        width: parent.width;
+        height: parent.height;
+
+        mouse-cursor: pointer;
+
+        clicked => {
+            root.clicked();
+        }
+    }
+
+    states [
+        hover when touch.has-hover && !touch.pressed: {
+            root.background: button-hover-background;
+            icon.colorize: button-icon-hover-color;
+
+            in-out {
+                animate background {
+                    duration: 200ms;
+                    easing: ease-in-out;
+                }
+
+                animate icon.colorize {
+                    duration: 200ms;
+                    easing: ease-in-out;
+                }
+            }
+        }
+
+        pressed when touch.pressed && use-pressed-state: {
+            root.background: button-pressed-background;
+            icon.colorize: button-icon-pressed-color;
+
+            in-out {
+                animate background {
+                    duration: 200ms;
+                    easing: ease-in-out;
+                }
+
+                animate icon.colorize {
+                    duration: 200ms;
+                    easing: ease-in-out;
+                }
+            }
+        }
+    ]
+}
+
+export component PlayButton inherits CustomButton {
+    callback play-clicked();
+    
+    button-width: 100px;
+    button-height: 36px;
+    button-border-radius: 13px;
+
+    button-background: #201e23;
+    button-hover-background: #2B2334;
+    button-pressed-background: #201E23;
+
+    button-icon: @image-url("../../img/play_icon.svg");
+    icon-height: 28px;
+    icon-width: 28px;
+    button-icon-color: #E2E2E2;
+    button-icon-hover-color: #9154D1;
+    button-icon-pressed-color: #F4F4F4;
+
+    clicked => {
+        root.play-clicked();
+    }
+}
