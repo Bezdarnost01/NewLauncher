@@ -23,6 +23,9 @@ export component AppWindow inherits Window {
     in-out property <string> telegram-link: "https://telegram.com";
     in-out property <string> discord-link: "https://discord.com";
 
+    in-out property <bool> use-background-image: false;
+    in property <image> background-image: @image-url("../img/backgrounds/nea.png");
+
     width: 540px;
     height: 540px;
 
@@ -34,10 +37,23 @@ export component AppWindow inherits Window {
     Rectangle {
         x: 0px;
         y: 0px;
+        width: root.width;
+        height: root.height;
 
         border-radius: 24px;
+        clip: true;
 
         background: #131115;
+
+        Image {
+            width: root.width;
+            height: root.height;
+
+            source: root.background-image;
+            opacity: 25%;
+            visible: root.use-background-image;
+            image-fit: cover;
+        }
 
         drag := TouchArea {
             x: 0px;
