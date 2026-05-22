@@ -1,0 +1,71 @@
+import "../../../fonts/Nunito-VariableFont.ttf";
+import { SettingsState } from "../globals.slint";
+import { Switch } from "../components/switch.slint";
+
+export component SettingsItem inherits Rectangle {
+    in-out property <string> name: "Discord RPC";
+    in-out property <string> description: "Включает активность клиента в Discord";
+
+    in property <length> control-width: 0px;
+    in property <length> horizontal-padding: 15px;
+    in property <length> bottom-padding: 13px;
+    in property <length> min-item-height: 64px;
+
+    width: 234px;
+    height: max(root.min-item-height, description.y + description.height + root.bottom-padding);
+
+    background: #19181B;
+    border-radius: 13px;
+    border-color: #26242D;
+    border-width: 1px;
+
+    name := Text {
+        x: root.horizontal-padding;
+        y: 13px;
+        width: parent.width - root.horizontal-padding * 2 - root.control-width;
+
+        text: parent.name;
+        color: #D9D9D9;
+        font-family: "Nunito";
+        font-weight: FontWeight.bold;
+        font-size: 15px;
+        letter-spacing: 0.1px;
+    }
+
+    description := Text {
+        x: root.horizontal-padding;
+        y: 36px;
+        width: parent.width - root.horizontal-padding * 2 - root.control-width;
+        wrap: word-wrap;
+
+        text: parent.description;
+        color: #A1A1A1;
+        font-family: "Nunito";
+        font-weight: FontWeight.light;
+        font-size: 9px;
+        letter-spacing: 0.1px;
+    }
+}
+
+export component SettingsSwitchItem inherits SettingsItem {
+    in-out property <bool> checked;
+
+    callback toggled(bool);
+
+    control-width: 50px;
+
+    Switch {
+        width: 35px;
+        height: 18px;
+
+        x: root.width - self.width - root.horizontal-padding;
+        y: 13px;
+
+        checked: root.checked;
+
+        toggled(value) => {
+            root.checked = value;
+            root.toggled(value);
+        }
+    }
+}

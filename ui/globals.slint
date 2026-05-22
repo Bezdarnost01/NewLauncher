@@ -1,0 +1,22 @@
+export enum AppPage {
+    Main,
+    Settings,
+    Search,
+}
+
+export global AppState {
+    in-out property <AppPage> current-page: AppPage.Main;
+}
+
+export global SettingsState {
+    in-out property <bool> discord-rpc-enabled: false;
+    callback discord-rpc-toggled(bool);
+    in-out property <bool> anti-cheat-enabled: false;
+    callback anti-cheat-toggled(bool);
+    in-out property <bool> match-alert-enabled: false;
+    callback match-alert-toggled(bool);
+    in-out property <bool> background-enabled: false;
+    callback background-toggled(bool);
+    in-out property <bool> random-backgrounds-enabled: false;
+    callback random-backgrounds-toggled(bool);
+}

@@ -1,0 +1,30 @@
+import { InfoBar } from "../components/infobar.slint";
+import { PlayButton } from "../components/button.slint";
+
+export component MainPage inherits Rectangle {
+    in-out property <string> online-count;
+    in-out property <string> version;
+    in-out property <string> update-date;
+
+    callback play-clicked();
+
+    background: transparent;
+
+    InfoBar {
+        x: (parent.width - self.width) / 2;
+        y: 72px;
+
+        online-count: root.online-count;
+        update-date: root.update-date;
+        version: root.version;
+    }
+
+    play-button := PlayButton {
+        x: (parent.width - play-button.width) / 2;
+        y: 314px;
+
+        play-clicked => {
+            root.play-clicked();
+        }
+    }
+}

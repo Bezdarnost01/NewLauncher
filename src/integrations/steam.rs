@@ -1,14 +1,13 @@
-use std::time::Duration;
-
 use serde::Deserialize;
 
-const CURRENT_PLAYERS_URL: &str = 
+use crate::integrations::http::HttpClient;
+
+const CURRENT_PLAYERS_URL: &str =
     "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/";
-const REQUEST_TIMEOUT: Duration = Duration::from_secs(15);
 
 #[derive(Clone)]
 pub struct SteamClient {
-    http: reqwest::Client,
+    http: HttpClient,
 }
 
 #[derive(Deserialize)]
@@ -22,30 +21,23 @@ struct CurrentPlayersPayload {
 }
 
 impl SteamClient {
-    pub fn new() -> Self {
-        let http = reqwest::Client::builder()
-            .timeout(REQUEST_TIMEOUT)
-            .build()
-            .unwrap_or_else(|_| reqwest::Client::new());
-
+    pub fn new(http: HttpClient) -> Self {
         Self { http }
     }
 
-    pub async fn current_players(&self, app_id: u32) -> u32 {
+    pub async fn current_players(&self, app_id: u32) -> Result<u32, reqwest::Error> {
         let url = format!("{CURRENT_PLAYERS_URL}?appid={app_id}");
 
-        let Ok(response) = self.http.get(url).send().await else {
-            return 0;
-        };
+        let payload = self
+            .http
+            .raw()
+            .get(url)
+            .send()
+            .await?
+            .error_for_status()?
+            .json::<CurrentPlayersResponse>()
+            .await?;
 
-        let Ok(response) = response.error_for_status() else {
-            return 0;
-        };
-
-        let Ok(payload) = response.json::<CurrentPlayersResponse>().await else {
-            return 0;
-        };
-
-        payload.response.player_count
+        Ok(payload.response.player_count)
     }
 }

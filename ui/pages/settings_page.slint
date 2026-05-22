@@ -1,0 +1,91 @@
+import "../../fonts/Nunito-VariableFont.ttf";
+import { SettingsState } from "../globals.slint";
+import { GamePathBox } from "../components/path.slint";
+import { SettingsSwitchItem, SettingsItem } from "../components/settings_items.slint";
+
+export component SettingsPage inherits Rectangle {
+    in-out property <string> game-path;
+
+    callback open-change-path();
+
+    background: transparent;
+
+    VerticalLayout {
+        x: 31px;
+        y: 16px;
+        width: parent.width;
+        height: parent.height;
+
+        spacing: 10px;
+
+        
+        HorizontalLayout {
+            spacing: 10px;
+
+            discord_rpc := SettingsSwitchItem {
+                name: "Discord RPC";
+                description: "Включает активность клиента в Discord";
+                checked <=> SettingsState.discord-rpc-enabled;
+
+                toggled(value) => {
+                    SettingsState.discord-rpc-toggled(value);
+                }
+            }
+
+            background_param := SettingsSwitchItem {
+                name: "Background";
+                description: "Включает отображение обоев";
+                checked <=> SettingsState.background-enabled;
+
+                toggled(value) => {
+                    SettingsState.background-toggled(value);
+                }
+            }
+        }
+        
+        HorizontalLayout {
+            spacing: 10px;
+
+            anti_cheat := SettingsSwitchItem {
+                name: "Anti-Cheat";
+                description: "Включает кастомный игровой античит";
+                checked <=> SettingsState.anti-cheat-enabled;
+
+                toggled(value) => {
+                    SettingsState.anti-cheat-toggled(value);
+                }
+            }
+
+            random_backgrounds := SettingsSwitchItem {
+                name: "Random Backgrounds";
+                description: "Переключает обои клиента раз в 30 секунд";
+                checked <=> SettingsState.random-backgrounds-enabled;
+
+                toggled(value) => {
+                    SettingsState.random-backgrounds-toggled(value);
+                }
+            }
+        }
+        
+        match_alert := SettingsSwitchItem {
+            name: "Match Alert";
+            description: "Уведомлять о нахождении матча";
+            checked <=> SettingsState.match-alert-enabled;
+
+            toggled(value) => {
+                SettingsState.match-alert-toggled(value);
+            }
+        }
+    }
+    
+    game_path_box := GamePathBox {
+        x: 63px;
+        y: 332px;
+
+        path-text: root.game-path;
+
+        open-change-path => {
+            root.open-change-path();
+        }
+    }
+}

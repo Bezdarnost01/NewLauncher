@@ -1,0 +1,84 @@
+export component Switch inherits Rectangle {
+    in-out property <bool> checked: false;
+
+    in property <length> knob-margin: 2px;
+    in property <length> knob-size: root.height - root.knob-margin * 2;
+
+    callback toggled(bool);
+
+    width: 42px;
+    height: 24px;
+
+    border-radius: root.height / 2;
+    background: checked ? #9154D1 : #555358;
+
+    knob := Rectangle {
+        width: root.knob-size;
+        height: root.knob-size;
+
+        x: root.checked ? root.width - self.width - root.knob-margin : root.knob-margin;
+        y: (root.height - self.height) / 2;
+
+        border-radius: self.height / 2;
+        background: checked ? #D9D9D9 : #A6A5A7;
+    }
+
+    touch := TouchArea {
+        width: parent.width;
+        height: parent.height;
+        mouse-cursor: pointer;
+
+        clicked => {
+            root.checked = !root.checked;
+            root.toggled(root.checked);
+        }
+    }
+
+    states [
+        checked when root.checked: {
+            root.background: #9154D1;
+            knob.background: #D9D9D9;
+            knob.x: root.width - knob.width - root.knob-margin;
+
+            in-out {
+                animate root.background {
+                    duration: 160ms;
+                    easing: ease-in-out;
+                }
+
+                animate knob.x {
+                    duration: 160ms;
+                    easing: ease-in-out;
+                }
+
+                animate knob.background {
+                    duration: 160ms;
+                    easing: ease-in-out;
+                }
+            }
+        }
+
+        unchecked when !root.checked: {
+            root.background: #555358;
+            knob.background: #A6A5A7;
+            knob.x: root.knob-margin;
+
+            in-out {
+                animate root.background {
+                    duration: 160ms;
+                    easing: ease-in-out;
+                }
+
+                animate knob.x {
+                    duration: 160ms;
+                    easing: ease-in-out;
+                }
+
+                animate knob.background {
+                    duration: 160ms;
+                    easing: ease-in-out;
+                }
+            }
+        }
+    ]
+}

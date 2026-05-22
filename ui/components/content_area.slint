@@ -1,0 +1,48 @@
+import { MainPage } from "../pages/main_page.slint";
+import { SettingsPage } from "../pages/settings_page.slint";
+import { SearchPage } from "../pages/search_page.slint";
+import { AppPage, AppState } from "../globals.slint";
+
+export component ContentArea inherits Rectangle {
+    in-out property <string> online-count;
+    in-out property <string> version;
+    in-out property <string> update-date;
+    in-out property <string> game-path;
+
+    callback play-clicked();
+    callback open-change-path();
+
+    background: transparent;
+
+    MainPage {
+        width: parent.width;
+        height: parent.height;
+        visible: AppState.current-page == AppPage.Main;
+
+        online-count: root.online-count;
+        update-date: root.update-date;
+        version: root.version;
+
+        play-clicked => {
+            root.play-clicked();
+        }
+    }
+
+    SettingsPage {
+        width: parent.width;
+        height: parent.height;
+        visible: AppState.current-page == AppPage.Settings;
+
+        game-path: root.game-path;
+
+        open-change-path => {
+            root.open-change-path();
+        }
+    }
+
+    SearchPage {
+        width: parent.width;
+        height: parent.height;
+        visible: AppState.current-page == AppPage.Search;
+    }
+}

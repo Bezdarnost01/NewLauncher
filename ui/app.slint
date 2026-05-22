@@ -1,7 +1,9 @@
 import { TitleBar } from "components/titlebar.slint";
 import { LowBar } from "components/lowbar.slint";
-import { InfoBar } from "components/infobar.slint";
-import { PlayButton } from "components/button.slint";
+import { ContentArea } from "components/content_area.slint";
+import { AppPage, AppState } from "globals.slint";
+export { SettingsState } from "globals.slint";
+
 export component AppWindow inherits Window {
     callback window-drag();
 
@@ -9,22 +11,25 @@ export component AppWindow inherits Window {
     callback minimize-clicked();
     callback play-clicked();
 
-    callback party-clicked();
+    callback search-clicked();
     callback home-clicked();
     callback settings-clicked();
     
     callback open-discord();
     callback open-telegram();
 
-    in-out property <int> online-count: 0;
+    callback open-change-path();
+
+    in-out property <string> online-count: "—";
     in-out property <string> version: "1.0.0";
     in-out property <string> update-date: "21.05.2026";
 
     in-out property <string> telegram-link: "https://telegram.com";
     in-out property <string> discord-link: "https://discord.com";
+    in-out property <string> game-path: "";
 
     in-out property <bool> use-background-image: false;
-    in property <image> background-image: @image-url("../img/backgrounds/nea.png");
+    in property <image> background-image;
 
     width: 540px;
     height: 540px;
@@ -68,10 +73,10 @@ export component AppWindow inherits Window {
         }
 
         TitleBar {
-            x: 0px;
+            x: 194px;
             y: 0px;
 
-            width: parent.width;
+            width: parent.width - self.x;
             height: 62px;
 
             close-clicked => {
@@ -81,29 +86,53 @@ export component AppWindow inherits Window {
             minimize-clicked => {
                 root.minimize-clicked();
             }
+
+            home-clicked => {
+                root.home-clicked();
+            }
+
+            search-clicked => {
+                root.search-clicked();
+            }
+
+            settings-clicked => {
+                root.settings-clicked();
+            }
         }
 
-        InfoBar {
-            x: 119px;
-            y: 129px;
+        Rectangle {
+            x: 0px;
+            y: 57px;
 
-            online-count: root.online-count;
-            update-date: root.update-date;
-            version: root.version;
-        }
+            width: parent.width;
+            height: 428px;
+            
+            background: transparent;
 
-        play-button := PlayButton {
-            x: (parent.width - play-button.width) / 2;
-            y: 371px;
+            ContentArea {
+                width: parent.width;
+                height: parent.height;
 
-            clicked => {
-                play-clicked();
+                online-count: root.online-count;
+                update-date: root.update-date;
+                version: root.version;
+                game-path: root.game-path;
+
+                play-clicked => {
+                    root.play-clicked();
+                }
+
+                open-change-path => {
+                    root.open-change-path();
+                }
             }
         }
 
         LowBar {
-            x: 0;
+            x: 0px;
             y: 485px;
+            width: parent.width;
+            height: 44px;
 
             open-discord => {
                 root.open-discord();
@@ -115,4 +144,15 @@ export component AppWindow inherits Window {
         }
     }
 
+    home-clicked => {
+        AppState.current-page = AppPage.Main;
+    }
+
+    settings-clicked => {
+        AppState.current-page = AppPage.Settings;
+    }
+
+    search-clicked => {
+        AppState.current-page = AppPage.Search;
+    }
 }

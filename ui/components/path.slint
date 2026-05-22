@@ -1,0 +1,62 @@
+import { CustomButton } from "button.slint";
+export component GamePathBox  inherits Rectangle {
+    callback open-change-path();
+
+    in-out property <string> path-text: "E:\\Projects";
+
+    width: 415px;
+    height: 64px;
+
+    background: #19181B;
+
+    border-radius: 13px;
+    border-width: 1px;
+    border-color: #26242D;
+
+    field := Rectangle {
+        x: 10px;
+        y: (parent.height - field.height) / 2;
+
+        width: 327px;
+        height: 30px;
+
+        border-radius: 8px;
+        border-width: 1px;
+        border-color: #26242D;
+
+        path := Text {
+            text: path-text;
+
+            x: 8px;
+            y: (parent.height - path.height) / 2 + 1px;
+
+            color: #A1A1A1;
+            font-family: "Nunito";
+            font-weight: FontWeight.light;
+            font-size: 9px;
+            letter-spacing: 0.1px;
+        }
+    }
+
+    path_change := CustomButton {
+        x: 356px;
+        y: (parent.height - path_change.height) / 2;
+
+        use-pressed-state: false;
+
+        button-width: 44px;
+        button-height: 44px;
+        button-border-radius: 13px;
+
+        button-background: #201e23;
+        button-hover-background: #2B2334;
+
+        button-icon: @image-url("../../img/folder_icon.svg");
+        button-icon-color: #A6A5A7;
+        button-icon-hover-color: #9154D1;
+
+        clicked => {
+            root.open-change-path();
+        }
+    }
+}

@@ -1,11 +1,84 @@
 import { CustomButton } from "button.slint";
+import { AppPage, AppState } from "../globals.slint";
 import "../../fonts/Nunito-VariableFont.ttf";
 
 export component TitleBar inherits Rectangle {
     callback close-clicked();
     callback minimize-clicked();
+    callback home-clicked();
+    callback search-clicked();
+    callback settings-clicked();
 
     background: transparent;
+
+    home := CustomButton {
+        x: 12px;
+        y: 12px;
+
+        use-pressed-state: false;
+
+        button-width: 44px;
+        button-height: 44px;
+        button-border-radius: 13px;
+
+        button-background: AppState.current-page == AppPage.Main ? #2B2334 : #201e23;
+        button-hover-background: #2B2334;
+
+        button-icon: @image-url("../../img/home_icon.svg");
+        button-icon-color: AppState.current-page == AppPage.Main ? #9154D1 : #A6A5A7;
+        button-icon-hover-color: #9154D1;
+
+        clicked => {
+            AppState.current-page = AppPage.Main;
+            root.home-clicked();
+        }
+    }
+
+    search := CustomButton {
+        x: 65px;
+        y: 12px;
+
+        use-pressed-state: false;
+
+        button-width: 44px;
+        button-height: 44px;
+        button-border-radius: 13px;
+
+        button-background: AppState.current-page == AppPage.Search ? #2B2334 : #201e23;
+        button-hover-background: #2B2334;
+
+        button-icon: @image-url("../../img/search_icon.svg");
+        button-icon-color: AppState.current-page == AppPage.Search ? #9154D1 : #A6A5A7;
+        button-icon-hover-color: #9154D1;
+
+        clicked => {
+            AppState.current-page = AppPage.Search;
+            root.search-clicked();
+        }
+    }
+
+    settings := CustomButton {
+        x: 118px;
+        y: 12px;
+
+        use-pressed-state: false;
+
+        button-width: 44px;
+        button-height: 44px;
+        button-border-radius: 13px;
+
+        button-background: AppState.current-page == AppPage.Settings ? #2B2334 : #201e23;
+        button-hover-background: #2B2334;
+
+        button-icon: @image-url("../../img/settings_icon.svg");
+        button-icon-color: AppState.current-page == AppPage.Settings ? #9154D1 : #A6A5A7;
+        button-icon-hover-color: #9154D1;
+
+        clicked => {
+            AppState.current-page = AppPage.Settings;
+            root.settings-clicked();
+        }
+    }
 
     close := CustomButton {
         x: parent.width - self.width - 12px;

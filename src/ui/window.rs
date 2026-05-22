@@ -1,30 +1,38 @@
 use crate::{
-    integrations::api::{ApiClient, config_channel},
+    config::Config,
+    integrations::{
+        api::{ApiClient, config_channel},
+        steam::SteamClient,
+    },
     ui::{AppWindow, handlers, online_status, update_info},
 };
 
-pub fn create(runtime: &tokio::runtime::Runtime) -> Result<AppWindow, slint::PlatformError> {
+pub fn create(
+    runtime: &tokio::runtime::Runtime,
+    api: ApiClient,
+    steam: SteamClient,
+    user_config: Config,
+) -> Result<AppWindow, slint::PlatformError> {
     let app = AppWindow::new()?;
+    handlers::bind(&app, &user_config);
 
-    let api_client = ApiClient::new();
-
-    let (config_sender, remote_config) = config_channel();
+    let (config_tx, config_rx) = config_channel();
 
     runtime.spawn(async move {
-        match api_client.get_config().await {
-            Ok(config) => {
-                let _ = config_sender.send(Some(config));
-            }
-            Err(error) => {
-                eprintln!("failed to load remote config: {error}");
-            }
+        let Some(remote) = api.fetch_config().await else {
+            log::error!("could not obtain remote config");
+            return;
+        };
+
+        if let Err(err) = api.download_backgrounds(&user_config, &remote).await {
+            log::warn!("download backgrounds failed: {err}");
         }
+
+        let _ = config_tx.send(Some(remote));
     });
 
-    handlers::bind(&app);
-
-    online_status::start(&app, runtime, remote_config.clone());
-    update_info::update(&app, runtime, remote_config.clone());
+    online_status::start(&app, runtime, steam, config_rx.clone());
+    update_info::update(&app, runtime, config_rx);
 
     Ok(app)
 }
