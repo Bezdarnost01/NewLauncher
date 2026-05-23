@@ -1,0 +1,88 @@
+export struct BackgroundItem {
+    name: string,
+    image: image
+}
+
+export component BackgroundCard inherits Rectangle {
+    in property <string> name;
+    in property <image> preview;
+    in property <bool> selected;
+
+    callback clicked(string);
+
+    width: 40px;
+    height: 40px;
+
+    background: #19181B;
+    border-radius: 6px;
+    border-color: selected ? #9154D1 : #26242D;
+    border-width: selected ? 1px : 0.4px;
+
+    clip: true;
+
+    Image {
+        width: parent.width;
+        height: parent.height;
+        source: root.preview;
+        image-fit: cover;
+    }
+
+    TouchArea {
+        width: parent.width;
+        height: parent.height;
+        mouse-cursor: pointer;
+
+        clicked => {
+            root.clicked(root.name);
+        }
+    }
+}
+
+export component BackgroundSelector inherits Rectangle {
+    in property <[BackgroundItem]> backgrounds;
+    in-out property <string> selected-background-name;
+
+    callback background-selected(string);
+
+    width: 234px;
+    height: 64px;
+
+    background: #19181B;
+    border-radius: 13px;
+    border-color: #26242D;
+    border-width: 1px;
+
+    property <int> columns: 5;
+    property <int> rows: root.backgrounds.length == 0 ? 1 : (root.backgrounds.length + root.columns - 1) / root.columns;
+
+    property <length> card-size: 40px;
+    property <length> gap: 4px;
+    property <length> horizontal-padding: 15px;
+
+    grid := GridLayout {
+        x: (root.width - self.width) / 2;
+        y: (root.height - self.height) / 2;
+
+        width: root.card-size * root.columns + root.gap * (root.columns - 1);
+        height: root.card-size * root.rows + root.gap * (root.rows - 1);
+
+        spacing: root.gap;
+
+        for bg[index] in root.backgrounds : BackgroundCard {
+            row: Math.floor(index / root.columns);
+            col: Math.mod(index, root.columns);
+
+            width: root.card-size;
+            height: root.card-size;
+
+            name: bg.name;
+            preview: bg.image;
+            selected: bg.name == root.selected-background-name;
+
+            clicked(name) => {
+                root.selected-background-name = name;
+                root.background-selected(name);
+            }
+        }
+    }
+}

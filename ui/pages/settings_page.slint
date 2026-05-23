@@ -1,12 +1,17 @@
 import "../../fonts/Nunito-VariableFont.ttf";
 import { SettingsState } from "../globals.slint";
 import { GamePathBox } from "../components/path.slint";
-import { SettingsSwitchItem, SettingsItem } from "../components/settings_items.slint";
+import { SettingsSwitchItem } from "../components/settings_items.slint";
+import { BackgroundSelector, BackgroundItem } from "../components/backgrounds.slint";
 
 export component SettingsPage inherits Rectangle {
     in-out property <string> game-path;
 
+    in-out property <[BackgroundItem]> backgrounds;
+    in-out property <string> selected-background-name: "";
+
     callback open-change-path();
+    callback background-selected(string);
 
     background: transparent;
 
@@ -67,13 +72,28 @@ export component SettingsPage inherits Rectangle {
             }
         }
         
-        match_alert := SettingsSwitchItem {
-            name: "Match Alert";
-            description: "Уведомлять о нахождении матча";
-            checked <=> SettingsState.match-alert-enabled;
+        HorizontalLayout {
+            spacing: 10px;
 
-            toggled(value) => {
-                SettingsState.match-alert-toggled(value);
+            match_alert := SettingsSwitchItem {
+                name: "Match Alert";
+                description: "Уведомлять о нахождении матча";
+                checked <=> SettingsState.match-alert-enabled;
+
+                toggled(value) => {
+                    SettingsState.match-alert-toggled(value);
+                }
+            }
+
+            BackgroundSelector {
+                backgrounds: root.backgrounds;
+                selected-background-name: root.selected-background-name;
+                opacity: SettingsState.background-enabled ? 100% : 45%;
+
+                background-selected(name) => {
+                    root.selected-background-name = name;
+                    root.background-selected(name);
+                }
             }
         }
     }

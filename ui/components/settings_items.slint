@@ -12,7 +12,7 @@ export component SettingsItem inherits Rectangle {
     in property <length> min-item-height: 64px;
 
     width: 234px;
-    height: max(root.min-item-height, description.y + description.height + root.bottom-padding);
+    height: root.min-item-height;
 
     background: #19181B;
     border-radius: 13px;
@@ -35,7 +35,7 @@ export component SettingsItem inherits Rectangle {
     description := Text {
         x: root.horizontal-padding;
         y: 36px;
-        width: parent.width - root.horizontal-padding * 2 - root.control-width;
+        width: parent.width - root.horizontal-padding * 2;
         wrap: word-wrap;
 
         text: parent.description;

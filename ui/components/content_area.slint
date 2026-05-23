@@ -1,6 +1,7 @@
 import { MainPage } from "../pages/main_page.slint";
 import { SettingsPage } from "../pages/settings_page.slint";
 import { SearchPage } from "../pages/search_page.slint";
+import { BackgroundItem } from "../components/backgrounds.slint";
 import { AppPage, AppState } from "../globals.slint";
 
 export component ContentArea inherits Rectangle {
@@ -8,9 +9,12 @@ export component ContentArea inherits Rectangle {
     in-out property <string> version;
     in-out property <string> update-date;
     in-out property <string> game-path;
+    in-out property <[BackgroundItem]> backgrounds;
+    in-out property <string> selected-background-name;
 
     callback play-clicked();
     callback open-change-path();
+    callback background-selected(string);
 
     background: transparent;
 
@@ -34,9 +38,16 @@ export component ContentArea inherits Rectangle {
         visible: AppState.current-page == AppPage.Settings;
 
         game-path: root.game-path;
+        backgrounds: root.backgrounds;
+        selected-background-name: root.selected-background-name;
 
         open-change-path => {
             root.open-change-path();
+        }
+
+        background-selected(name) => {
+            root.selected-background-name = name;
+            root.background-selected(name);
         }
     }
 

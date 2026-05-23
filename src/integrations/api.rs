@@ -80,13 +80,9 @@ impl ApiClient {
 
     pub async fn download_backgrounds(
         &self,
-        config: &Config,
+        _config: &Config,
         remote_config: &ApiConfig,
     ) -> Result<(), Box<dyn Error + Send + Sync>>  {
-        if !config.background_enabled {
-            return Ok(());
-        }
-
         let background_dir = ensure_backgrounds_dir()?;
 
         for background in &remote_config.backgrounds {

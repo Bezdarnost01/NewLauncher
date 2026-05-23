@@ -1,6 +1,7 @@
 import { TitleBar } from "components/titlebar.slint";
 import { LowBar } from "components/lowbar.slint";
 import { ContentArea } from "components/content_area.slint";
+import { BackgroundSelector, BackgroundItem } from "components/backgrounds.slint";
 import { AppPage, AppState } from "globals.slint";
 export { SettingsState } from "globals.slint";
 
@@ -20,6 +21,8 @@ export component AppWindow inherits Window {
 
     callback open-change-path();
 
+    callback background-selected(string);
+
     in-out property <string> online-count: "—";
     in-out property <string> version: "1.0.0";
     in-out property <string> update-date: "21.05.2026";
@@ -30,6 +33,9 @@ export component AppWindow inherits Window {
 
     in-out property <bool> use-background-image: false;
     in property <image> background-image;
+
+    in-out property <[BackgroundItem]> backgrounds;
+    in-out property <string> selected-background-name: "";
 
     width: 540px;
     height: 540px;
@@ -118,12 +124,20 @@ export component AppWindow inherits Window {
                 version: root.version;
                 game-path: root.game-path;
 
+                backgrounds: root.backgrounds;
+                selected-background-name: root.selected-background-name;
+
                 play-clicked => {
                     root.play-clicked();
                 }
 
                 open-change-path => {
                     root.open-change-path();
+                }
+
+                background-selected(name) => {
+                    root.selected-background-name = name;
+                    root.background-selected(name);
                 }
             }
         }
